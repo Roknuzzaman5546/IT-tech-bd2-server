@@ -29,40 +29,40 @@ async function run() {
         const productcollection = client.db('productsdb').collection('product')
         const cardcollection = client.db('productsdb').collection('card')
 
-        app.get('/product', async(req, res) =>{
+        app.get('/product', async (req, res) => {
             const cursor = productcollection.find()
             const resut = await cursor.toArray()
             res.send(resut)
         })
 
-        app.get('/card', async(req, res) =>{
+        app.get('/card', async (req, res) => {
             const cursor = cardcollection.find()
             const resut = await cursor.toArray()
             res.send(resut)
         })
-        
-        app.get('/product/:id', async(req, res) =>{
+
+        app.get('/product/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await productcollection.findOne(query)
             res.send(result)
         })
-        
 
-        app.put('/product/:id', async(req, res) =>{
+
+        app.put('/product/:id', async (req, res) => {
             const id = req.params.id;
             console.log(id)
-            const filter = { _id : new ObjectId(id)}
+            const filter = { _id: new ObjectId(id) }
             const options = { upsert: true };
             const productsUpdate = req.body;
             const updateproducts = {
                 $set: {
                     name: productsUpdate.name,
-                    photo: productsUpdate.photo, 
-                    brand: productsUpdate.brand, 
-                    category: productsUpdate.category, 
-                    price: productsUpdate.price, 
-                    description: productsUpdate.description, 
+                    photo: productsUpdate.photo,
+                    brand: productsUpdate.brand,
+                    category: productsUpdate.category,
+                    price: productsUpdate.price,
+                    description: productsUpdate.description,
                     rating: productsUpdate.rating
                 }
             }
@@ -70,22 +70,22 @@ async function run() {
             res.send(result)
         })
 
-        app.post('/card', async(req, res) =>{
+        app.post('/product', async (req, res) => {
+            const productdata = req.body;
+            const result = await productcollection.insertOne(productdata)
+            res.send(result)
+        })
+
+        app.post('/card', async (req, res) => {
             const carddata = req.body;
             const result = await cardcollection.insertOne(carddata)
             res.send(result)
         })
 
-        app.delete('/card/:id', async (req, res) =>{
+        app.delete('/card/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id : new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await cardcollection.deleteOne(query)
-            res.send(result)
-        })
-
-        app.post('/product', async (req, res) => {
-            const productdata = req.body;
-            const result = await productcollection.insertOne(productdata)
             res.send(result)
         })
 
